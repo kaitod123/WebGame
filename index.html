@@ -5,56 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corporate Climber: Online Board Game</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700;800;900&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         :root {
-            --outline: #1e1e1e;
-            --primary: #3b82f6;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --money: #84cc16;
-            --bg-dark: #0f172a;
-            
-            /* Player Colors */
-            --p1: #ef4444;
-            --p2: #3b82f6;
-            --p3: #10b981;
-            --p4: #f59e0b;
+            --outline: #1e1e1e; --primary: #3b82f6; --accent: #10b981;
+            --danger: #ef4444; --warning: #f59e0b; --money: #84cc16; --bg-dark: #0f172a;
         }
-
         * { box-sizing: border-box; user-select: none; }
-
         body { 
-            font-family: 'Prompt', sans-serif; 
-            background-color: var(--bg-dark);
+            font-family: 'Prompt', sans-serif; background-color: var(--bg-dark);
             margin: 0; display: flex; justify-content: center; align-items: center; 
             height: 100vh; color: var(--outline); overflow: hidden;
         }
-
         #app-container { 
-            width: 100vw; height: 100vh; 
-            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            width: 100vw; height: 100vh; background: linear-gradient(135deg, #1e293b, #0f172a); 
             position: relative; overflow: hidden; display: flex;
         }
-
-        /* --- Screens --- */
         .screen-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
-        
         #loading-screen { background: var(--bg-dark); color: white; z-index: 2000; }
         #lobby-screen { background: rgba(248, 250, 252, 0.95); z-index: 1000; display: none; }
         #room-screen { background: rgba(248, 250, 252, 0.95); z-index: 900; display: none; }
         #game-ui { display: none; width: 100%; height: 100%; flex-direction: row; z-index: 100; overflow: hidden;}
-
         .title-logo {
             font-size: 50px; font-weight: 900; color: white;
             text-shadow: -3px -3px 0 var(--outline), 3px -3px 0 var(--outline), -3px 3px 0 var(--outline), 3px 3px 0 var(--outline), 6px 6px 0px var(--outline);
@@ -68,43 +45,31 @@
         }
         .btn-select:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--outline); }
         .btn-select:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 4px 6px 0px var(--outline); }
-
-        /* --- Game Layout --- */
         #left-panel, #right-panel {
             width: 280px; padding: 20px; display: flex; flex-direction: column; gap: 20px;
-            background: rgba(255,255,255,0.05); border-right: 4px solid var(--outline);
-            overflow-y: auto;
+            background: rgba(255,255,255,0.05); border-right: 4px solid var(--outline); overflow-y: auto;
         }
         #right-panel { border-right: none; border-left: 4px solid var(--outline); }
-        
         #center-panel {
             flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px; position: relative; overflow-y: auto;
         }
-
-        /* --- Player Cards --- */
         .player-card {
             background: white; border: 4px solid var(--outline); border-radius: 16px;
             padding: 15px; box-shadow: 4px 6px 0px rgba(0,0,0,0.5); opacity: 0.5;
             transition: transform 0.3s, opacity 0.3s, box-shadow 0.3s; position: relative;
         }
-        .player-card.active {
-            opacity: 1; transform: scale(1.05); box-shadow: 6px 8px 0px var(--warning); border-color: var(--warning);
-        }
+        .player-card.active { opacity: 1; transform: scale(1.05); box-shadow: 6px 8px 0px var(--warning); border-color: var(--warning); }
         .p-name { font-size: 20px; font-weight: 900; margin: 0 0 10px 0; border-bottom: 2px dashed #cbd5e1; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;}
         .p-stat { font-size: 14px; font-weight: 800; margin-bottom: 5px; display: flex; justify-content: space-between;}
         .p-stat i { width: 20px; text-align: center; }
         .p-ins-area { font-size: 14px; color: #64748b; margin-top: 8px; min-height: 20px; display: flex; flex-wrap: wrap; gap: 5px;}
-
-        /* --- Board --- */
         #board-wrapper {
             background: #f8fafc; border: 6px solid var(--outline); border-radius: 20px;
-            padding: 20px; box-shadow: 10px 15px 0px rgba(0,0,0,0.6);
-            display: flex; flex-direction: column; gap: 10px; max-width: 900px;
+            padding: 20px; box-shadow: 10px 15px 0px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px; max-width: 900px;
         }
         .board-row { display: flex; gap: 10px; }
         .board-row:nth-child(even) { flex-direction: row-reverse; }
-
         .space {
             width: 80px; height: 80px; border: 3px solid var(--outline); border-radius: 12px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -112,46 +77,32 @@
         }
         .space-icon { font-size: 28px; }
         .space-num { position: absolute; top: 2px; left: 4px; font-size: 10px; font-weight: 900; opacity: 0.5;}
-        
-        .type-start { background: #cbd5e1; }
-        .type-work { background: #bfdbfe; color: #1e3a8a; }
-        .type-food { background: #fde68a; color: #b45309; }
-        .type-event { background: #e9d5ff; color: #7e22ce; }
-        .type-hospital { background: #fecaca; color: #991b1b; }
-        .type-invest { background: #a7f3d0; color: #047857; }
-        .type-insurance { background: #c7d2fe; color: #4338ca; }
-        .type-goal { background: var(--warning); color: white; border-color: white;}
-
-        /* --- Tokens --- */
+        .type-start { background: #cbd5e1; } .type-work { background: #bfdbfe; color: #1e3a8a; }
+        .type-food { background: #fde68a; color: #b45309; } .type-event { background: #e9d5ff; color: #7e22ce; }
+        .type-hospital { background: #fecaca; color: #991b1b; } .type-invest { background: #a7f3d0; color: #047857; }
+        .type-insurance { background: #c7d2fe; color: #4338ca; } .type-goal { background: var(--warning); color: white; border-color: white;}
         .tokens-area {
-            position: absolute; bottom: 5px; right: 5px;
-            display: flex; flex-wrap: wrap-reverse; gap: 4px; width: 100%; justify-content: flex-end; padding-right: 5px;
+            position: absolute; bottom: 5px; right: 5px; display: flex; flex-wrap: wrap-reverse; gap: 4px; width: 100%; justify-content: flex-end; padding-right: 5px;
         }
         .token {
             width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;
             box-shadow: 1px 2px 0px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
             font-size: 10px; font-weight: 900; color: white; z-index: 50; transition: all 0.3s;
         }
-
-        /* --- Controls --- */
         #controls {
             margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 15px;
             background: rgba(255,255,255,0.1); padding: 20px 40px; border-radius: 20px; border: 3px dashed rgba(255,255,255,0.3);
         }
         .turn-announcer { font-size: 24px; font-weight: 900; color: white; text-shadow: 2px 2px 0 #000; }
-        
         .dice-display { font-size: 35px; width: 40px; text-align: center; }
         .dice-shake { animation: shake 0.5s infinite; }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(15deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(-15deg); } 100% { transform: rotate(0deg); } }
-
         .floating-text {
             position: absolute; font-weight: 900; font-size: 22px; z-index: 2000; white-space: nowrap;
             text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 3px 4px 0 var(--outline);
             pointer-events: none; animation: floatUpText 1.5s ease-out forwards;
         }
         @keyframes floatUpText { 0% { opacity: 1; transform: translateY(0) scale(0.8); } 100% { opacity: 0; transform: translateY(-70px) scale(1.2); } }
-
-        /* --- Insurance Selection Popup UI --- */
         .ins-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 20px; margin-bottom: 10px; }
         .ins-radio { display: none; }
         .ins-card {
@@ -165,16 +116,12 @@
         .ins-card .i-name { font-size: 15px; font-weight: 800; color: var(--outline); line-height: 1.2; margin-bottom: 5px;}
         .ins-card .i-cost { font-size: 14px; font-weight: 700; color: var(--danger); margin-bottom: 5px; background: #fee2e2; padding: 2px 8px; border-radius: 10px;}
         .ins-card .i-desc { font-size: 12px; font-weight: 600; color: #64748b; line-height: 1.3;}
-
         @media (max-width: 1024px) {
             #game-ui { flex-direction: column; overflow-y: auto;}
             #left-panel, #right-panel { width: 100%; flex-direction: row; border: none; padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.2); flex-wrap: wrap; justify-content: center;}
-            .player-card { width: 160px; padding: 10px; }
-            .p-name { font-size: 16px; }
-            .space { width: 55px; height: 55px; }
-            .space-icon { font-size: 20px; }
-            #board-wrapper { padding: 10px; }
-            .btn-roll { padding: 10px 20px; font-size: 18px; }
+            .player-card { width: 160px; padding: 10px; } .p-name { font-size: 16px; }
+            .space { width: 55px; height: 55px; } .space-icon { font-size: 20px; }
+            #board-wrapper { padding: 10px; } .btn-roll { padding: 10px 20px; font-size: 18px; }
             .ins-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
@@ -182,43 +129,29 @@
 <body>
 
 <div id="app-container">
-    
-    <!-- 1. Loading Screen -->
     <div id="loading-screen" class="screen-layer">
         <i class="fa-solid fa-spinner fa-spin" style="font-size: 60px; margin-bottom: 20px; color: var(--primary);"></i>
         <h2 style="font-weight: 900;">กำลังเชื่อมต่อเซิร์ฟเวอร์...</h2>
     </div>
 
-    <!-- 2. Lobby Screen -->
     <div id="lobby-screen" class="screen-layer">
         <div class="title-logo">CORPORATE<br>CLIMBER</div>
         <div style="background:var(--primary); color:white; padding: 5px 15px; border-radius:20px; font-weight:800; margin-bottom:20px;">ONLINE MULTIPLAYER</div>
-        <p style="font-weight: 700; color: #475569; margin-bottom: 20px;">เล่นออนไลน์กับเพื่อน (1-4 คน)</p>
-        
         <button class="btn-select" onclick="window.createRoom()"><i class="fa-solid fa-plus"></i> สร้างห้องใหม่</button>
         <button class="btn-select" style="background:var(--warning);" onclick="window.joinRoom()"><i class="fa-solid fa-right-to-bracket"></i> เข้าร่วมห้อง</button>
     </div>
 
-    <!-- 3. Room Wait Screen -->
     <div id="room-screen" class="screen-layer">
         <h2 style="font-size: 20px; margin-bottom: 5px; color: #475569;">รหัสห้องของคุณ</h2>
         <div style="font-size: 60px; font-weight: 900; color: var(--primary); letter-spacing: 5px; text-shadow: 3px 3px 0 var(--outline); margin-bottom: 20px;" id="display-room-code">----</div>
         <p style="color: var(--outline); font-weight:800; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> ผู้เล่นที่เข้าร่วมแล้ว (<span id="player-count">0</span>/4)</p>
-        
-        <div id="player-list" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 30px; width: 100%; max-width: 300px;">
-            <!-- รายชื่อผู้เล่น -->
-        </div>
-
+        <div id="player-list" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 30px; width: 100%; max-width: 300px;"></div>
         <button id="btn-start-game" class="btn-select" style="display:none; background:var(--accent);" onclick="window.startGameHost()"><i class="fa-solid fa-play"></i> เริ่มเกม!</button>
         <div id="wait-host-text" style="display:none; font-weight:900; color:var(--warning); font-size: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> รอหัวหน้าห้องกดเริ่มเกม...</div>
     </div>
 
-    <!-- 4. Game UI -->
     <div id="game-ui">
-        <!-- แผงซ้าย -->
         <div id="left-panel"></div>
-
-        <!-- แผงกลาง (กระดานและลูกเต๋า) -->
         <div id="center-panel">
             <div id="board-wrapper"></div>
             <div id="controls">
@@ -228,25 +161,19 @@
                 </button>
             </div>
         </div>
-
-        <!-- แผงขวา -->
         <div id="right-panel"></div>
     </div>
-
 </div>
 
-<!-- Firebase Logic Module -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+    // --- ตั้งค่าให้เชื่อมต่อไปยัง Render ของคุณ ---
+    const SERVER_URL = "https://corporate-game-server.onrender.com";
+    const socket = io(SERVER_URL);
 
-    // --- Global Config & Constants ---
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'corporate-climber-online';
-    const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b']; // var(--p1) to var(--p4)
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
     const pNames = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
     const diceIcons = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
-    
     const boardLayout = [
         { type: 'start', icon: 'fa-flag' }, { type: 'work', icon: 'fa-briefcase' }, { type: 'food', icon: 'fa-burger' },
         { type: 'work', icon: 'fa-briefcase' }, { type: 'event', icon: 'fa-question' }, { type: 'invest', icon: 'fa-chart-line' },
@@ -259,7 +186,6 @@
         { type: 'food', icon: 'fa-burger' }, { type: 'work', icon: 'fa-briefcase' }, { type: 'invest', icon: 'fa-chart-line' },
         { type: 'event', icon: 'fa-question' }, { type: 'hospital', icon: 'fa-truck-medical' }, { type: 'goal', icon: 'fa-trophy' }
     ];
-
     const insuranceTypes = {
         'health': { name: 'ประกันสุขภาพ', cost: 3000, icon: 'fa-notes-medical', desc: 'คุ้มครองค่ารักษาพยาบาลฟรี' },
         'accident': { name: 'ประกันอุบัติเหตุ', cost: 2000, icon: 'fa-car-burst', desc: 'ซ่อมรถฟรีเมื่อเกิดอุบัติเหตุ' },
@@ -267,165 +193,93 @@
         'life': { name: 'ประกันชีวิต', cost: 5000, icon: 'fa-heart-pulse', desc: 'รับเงินก้อน 15,000 ฿ ตอนเกษียณ' }
     };
 
-    // --- State Variables ---
-    let app, auth, db;
-    let currentUserId = null;
-    let roomDocRef = null;
+    let currentUserId = Math.random().toString(36).substring(2, 10);
+    let roomCode = null;
     let myPlayerId = null;
     let isHost = false;
     let gameState = null;
     let localPlayers = [];
 
-    // --- 1. Init Firebase ---
-    async function initFirebase() {
-        try {
-            const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-            const config = JSON.parse(configStr);
-            if(!config || !config.projectId) {
-                document.getElementById('loading-screen').innerHTML = "<h3 style='color:var(--danger);'>การเชื่อมต่อล้มเหลว (ไม่พบ Firebase Config)</h3>";
-                return;
-            }
+    // เมื่อต่อเซิร์ฟเวอร์ติด ให้ซ่อนหน้า Loading
+    socket.on('connect', () => {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('lobby-screen').style.display = 'flex';
+    });
 
-            app = initializeApp(config);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUserId = user.uid;
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('lobby-screen').style.display = 'flex';
-                }
-            });
-        } catch(e) {
-            console.error(e);
-            document.getElementById('loading-screen').innerHTML = "<h3 style='color:var(--danger);'>การเชื่อมต่อล้มเหลว</h3><p>โปรดลองรีเฟรชหน้าต่าง</p>";
-        }
+    // ฟังก์ชันสำหรับส่งข้อมูลอัปเดตไปให้เพื่อนทุกคน
+    function syncState() {
+        if(roomCode) socket.emit('update_state', { roomCode: roomCode, newState: gameState });
     }
-    initFirebase();
 
-    // --- 2. Lobby Functions ---
-    window.createRoom = async function() {
-        const code = Math.floor(1000 + Math.random() * 9000).toString();
-        roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code);
+    // เมื่อมีเพื่อนอัปเดตข้อมูลมา
+    socket.on('state_updated', (newState) => {
+        const oldState = gameState;
+        gameState = newState;
         
-        let p = {
-            uid: currentUserId, id: 0, name: pNames[0], color: colors[0],
-            money: 10000, energy: 100, pos: 0, active: true, insurances: [], skipTurn: 0, ready: false
-        };
+        localPlayers = [];
+        for(let i=0; i<gameState.playerCount; i++) {
+            localPlayers.push(gameState.players[i]);
+        }
 
-        let initialState = {
-            status: 'lobby',
-            players: { "0": p },
-            playerCount: 1,
-            currentPlayerIndex: 0
-        };
+        if(gameState.status === 'lobby') {
+            renderRoomScreen();
+        } 
+        else if (gameState.status === 'choosing_insurance') {
+            if(!oldState || oldState.status === 'lobby') {
+                transitionToGame(); promptStartingInsurance();
+            }
+            checkAllReady(); 
+        }
+        else if (gameState.status === 'playing') {
+            if(oldState && oldState.status === 'choosing_insurance') {
+                updateAllUI(); updateTurnDisplay();
+            } else {
+                handleLiveSync(oldState);
+            }
+        }
+        else if (gameState.status === 'finished') {
+            if(!oldState || oldState.status !== 'finished') showWinnerScreen();
+        }
+    });
 
-        await setDoc(roomDocRef, initialState);
-        myPlayerId = 0;
-        isHost = true;
-        document.getElementById('display-room-code').innerText = code;
-        startListening();
+    window.createRoom = function() {
+        let p = { uid: currentUserId, id: 0, name: pNames[0], color: colors[0], money: 10000, energy: 100, pos: 0, active: true, insurances: [], skipTurn: 0, ready: false };
+        let initialState = { status: 'lobby', players: { "0": p }, playerCount: 1, currentPlayerIndex: 0 };
+
+        socket.emit('create_room', { initialState }, (res) => {
+            if(res.success) {
+                roomCode = res.roomCode; myPlayerId = 0; isHost = true; gameState = initialState;
+                document.getElementById('display-room-code').innerText = roomCode;
+                renderRoomScreen();
+            }
+        });
     }
 
     window.joinRoom = async function() {
-        const { value: code } = await Swal.fire({
-            title: 'ใส่รหัสห้อง 4 หลัก', input: 'text', inputAttributes: { maxlength: 4 },
-            showCancelButton: true, confirmButtonText: 'เข้าร่วม', confirmButtonColor: 'var(--warning)',
-            customClass: { popup: 'hud-panel' }
-        });
+        const { value: code } = await Swal.fire({ title: 'ใส่รหัสห้อง 4 หลัก', input: 'text', inputAttributes: { maxlength: 4 }, showCancelButton: true, confirmButtonText: 'เข้าร่วม', confirmButtonColor: 'var(--warning)', customClass: { popup: 'hud-panel' } });
         if(!code) return;
 
         Swal.showLoading();
-        roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code.toUpperCase());
-        
-        try {
-            await runTransaction(db, async (transaction) => {
-                const docSnap = await transaction.get(roomDocRef);
-                if (!docSnap.exists()) throw "ไม่พบห้องนี้";
-                
-                let state = docSnap.data();
-                if(state.status !== 'lobby') throw "ห้องนี้เริ่มเกมไปแล้ว";
-                if(state.playerCount >= 4) throw "ห้องเต็มแล้ว";
-                
-                let existingId = -1;
-                for(let i=0; i<state.playerCount; i++) {
-                    if(state.players[i].uid === currentUserId) { existingId = i; break; }
-                }
+        let newP = { uid: currentUserId, id: 0, name: 'Player', color: '#000', money: 10000, energy: 100, pos: 0, active: true, insurances: [], skipTurn: 0, ready: false };
 
-                if(existingId !== -1) {
-                    myPlayerId = existingId;
-                } else {
-                    myPlayerId = state.playerCount;
-                    let newP = {
-                        uid: currentUserId, id: myPlayerId, name: pNames[myPlayerId], color: colors[myPlayerId],
-                        money: 10000, energy: 100, pos: 0, active: true, insurances: [], skipTurn: 0, ready: false
-                    };
-                    state.players[myPlayerId] = newP;
-                    state.playerCount++;
-                    transaction.update(roomDocRef, {
-                        [`players.${myPlayerId}`]: newP,
-                        playerCount: state.playerCount
-                    });
-                }
-            });
-            document.getElementById('display-room-code').innerText = code.toUpperCase();
+        socket.emit('join_room', { roomCode: code.toUpperCase(), playerState: newP }, (res) => {
             Swal.close();
-            startListening();
-        } catch (e) {
-            Swal.fire('เข้าไม่ได้', e.toString(), 'error');
-        }
-    }
-
-    window.startGameHost = async function() {
-        if(gameState.playerCount < 1) return; // Allow 1 player for testing
-        await updateDoc(roomDocRef, { status: 'choosing_insurance' });
-    }
-
-    // --- 3. Sync Logic ---
-    function startListening() {
-        unsubscribe = onSnapshot(roomDocRef, (docSnap) => {
-            if(!docSnap.exists()) return;
-            const data = docSnap.data();
-            const oldState = gameState;
-            gameState = data;
-            
-            // Map obj to array locally
-            localPlayers = [];
-            for(let i=0; i<gameState.playerCount; i++) {
-                localPlayers.push(gameState.players[i]);
+            if(res.success) {
+                roomCode = code.toUpperCase(); gameState = res.state; myPlayerId = res.myPlayerId;
+                gameState.players[myPlayerId].name = pNames[myPlayerId];
+                gameState.players[myPlayerId].color = colors[myPlayerId];
+                document.getElementById('display-room-code').innerText = roomCode;
+                syncState();
+            } else {
+                Swal.fire('เข้าไม่ได้', res.message, 'error');
             }
-
-            if(gameState.status === 'lobby') {
-                renderRoomScreen();
-            } 
-            else if (gameState.status === 'choosing_insurance') {
-                if(!oldState || oldState.status === 'lobby') {
-                    transitionToGame();
-                    promptStartingInsurance();
-                }
-                checkAllReady(); // Only host processes this inside
-            }
-            else if (gameState.status === 'playing') {
-                if(oldState && oldState.status === 'choosing_insurance') {
-                    updateAllUI();
-                    updateTurnDisplay();
-                } else {
-                    handleLiveSync(oldState);
-                }
-            }
-            else if (gameState.status === 'finished') {
-                if(!oldState || oldState.status !== 'finished') showWinnerScreen();
-            }
-        }, (error) => {
-            console.error("Firebase Snapshot Error:", error);
         });
+    }
+
+    window.startGameHost = function() {
+        if(gameState.playerCount < 1) return;
+        gameState.status = 'choosing_insurance';
+        syncState();
     }
 
     function renderRoomScreen() {
@@ -438,17 +292,15 @@
             let p = gameState.players[i];
             listHtml += `<div style="background:white; border:3px solid var(--outline); padding:10px 15px; border-radius:10px; font-weight:900; color:${p.color}; display:flex; justify-content:space-between; font-size: 18px;">
                 <span>${p.name}</span>
-                ${p.uid === currentUserId ? '<span><i class="fa-solid fa-star" style="color:var(--warning)"></i> คุณ</span>' : ''}
+                ${p.id === myPlayerId ? '<span><i class="fa-solid fa-star" style="color:var(--warning)"></i> คุณ</span>' : ''}
             </div>`;
         }
         document.getElementById('player-list').innerHTML = listHtml;
         
         if(isHost) {
-            document.getElementById('btn-start-game').style.display = 'flex';
-            document.getElementById('wait-host-text').style.display = 'none';
+            document.getElementById('btn-start-game').style.display = 'flex'; document.getElementById('wait-host-text').style.display = 'none';
         } else {
-            document.getElementById('btn-start-game').style.display = 'none';
-            document.getElementById('wait-host-text').style.display = 'block';
+            document.getElementById('btn-start-game').style.display = 'none'; document.getElementById('wait-host-text').style.display = 'block';
         }
     }
 
@@ -456,42 +308,32 @@
         document.getElementById('room-screen').style.display = 'none';
         document.getElementById('game-ui').style.display = 'flex';
         
-        // Build UI Framework
-        document.getElementById('left-panel').innerHTML = '';
-        document.getElementById('right-panel').innerHTML = '';
+        document.getElementById('left-panel').innerHTML = ''; document.getElementById('right-panel').innerHTML = '';
         for(let i=0; i<gameState.playerCount; i++) {
             let p = localPlayers[i];
-            let cardHtml = `
-                <div class="player-card" id="card-p${p.id}">
-                    <h3 class="p-name" style="color:${p.color}">${p.name} ${p.id === myPlayerId ? '<i class="fa-solid fa-star" title="คุณ" style="color:var(--warning)"></i>' : ''}</h3>
-                    <div class="p-stat"><span style="color:var(--money);"><i class="fa-solid fa-coins"></i> เงิน</span> <span id="p${p.id}-money">10,000</span></div>
-                    <div class="p-stat"><span style="color:var(--accent);"><i class="fa-solid fa-bolt"></i> พลังงาน</span> <span id="p${p.id}-energy">100%</span></div>
-                    <div class="p-ins-area" id="p${p.id}-ins"></div>
-                </div>
-            `;
+            let cardHtml = `<div class="player-card" id="card-p${p.id}">
+                <h3 class="p-name" style="color:${p.color}">${p.name} ${p.id === myPlayerId ? '<i class="fa-solid fa-star" style="color:var(--warning)"></i>' : ''}</h3>
+                <div class="p-stat"><span style="color:var(--money);"><i class="fa-solid fa-coins"></i> เงิน</span> <span id="p${p.id}-money">10,000</span></div>
+                <div class="p-stat"><span style="color:var(--accent);"><i class="fa-solid fa-bolt"></i> พลังงาน</span> <span id="p${p.id}-energy">100%</span></div>
+                <div class="p-ins-area" id="p${p.id}-ins"></div>
+            </div>`;
             if(i % 2 === 0) document.getElementById('left-panel').innerHTML += cardHtml;
             else document.getElementById('right-panel').innerHTML += cardHtml;
         }
         
-        // Build Board
         const wrapper = document.getElementById('board-wrapper');
-        wrapper.innerHTML = '';
-        let spaceIndex = 0;
+        wrapper.innerHTML = ''; let spaceIndex = 0;
         for (let r = 0; r < 5; r++) {
-            let rowDiv = document.createElement('div');
-            rowDiv.className = 'board-row';
-            let rowSpaces = [];
+            let rowDiv = document.createElement('div'); rowDiv.className = 'board-row'; let rowSpaces = [];
             for (let c = 0; c < 6; c++) {
                 if (spaceIndex >= boardLayout.length) break;
                 let spaceData = boardLayout[spaceIndex];
                 let cell = document.createElement('div');
                 cell.className = `space type-${spaceData.type}`;
                 cell.innerHTML = `<div class="space-num">${spaceIndex}</div><i class="fa-solid ${spaceData.icon} space-icon"></i><div class="tokens-area" id="tokens-${spaceIndex}"></div>`;
-                rowSpaces.push(cell);
-                spaceIndex++;
+                rowSpaces.push(cell); spaceIndex++;
             }
-            rowSpaces.forEach(cell => rowDiv.appendChild(cell));
-            wrapper.appendChild(rowDiv);
+            rowSpaces.forEach(cell => rowDiv.appendChild(cell)); wrapper.appendChild(rowDiv);
         }
         drawTokens();
     }
@@ -500,197 +342,130 @@
         let p = localPlayers[myPlayerId];
         document.getElementById(`card-p${p.id}`).classList.add('active');
 
-        let htmlContent = `
-            <h1 style="color:${p.color}; margin: 0 0 5px 0; font-weight: 900;">${p.name}</h1>
+        let htmlContent = `<h1 style="color:${p.color}; margin: 0 0 5px 0; font-weight: 900;">${p.name}</h1>
             <h2 style="margin: 0 0 10px 0; color: var(--outline); font-size: 20px;">เลือกซื้อประกันเริ่มต้น</h2>
-            <p style="font-weight: 600; color: #475569; margin: 0 0 10px 0; font-size: 14px;">เงินทุนปัจจุบัน: 10,000 ฿</p>
-            <div class="ins-grid">
-        `;
+            <div class="ins-grid">`;
         for(let key in insuranceTypes) {
             let ins = insuranceTypes[key];
-            htmlContent += `<label><input type="radio" name="start_ins" value="${key}" class="ins-radio"><div class="ins-card"><i class="fa-solid ${ins.icon}"></i><div class="i-name">${ins.name}</div><div class="i-cost">-${ins.cost.toLocaleString()} ฿</div><div class="i-desc">${ins.desc}</div></div></label>`;
+            htmlContent += `<label><input type="radio" name="start_ins" value="${key}" class="ins-radio"><div class="ins-card"><i class="fa-solid ${ins.icon}"></i><div class="i-name">${ins.name}</div><div class="i-cost">-${ins.cost.toLocaleString()} ฿</div></div></label>`;
         }
-        htmlContent += `<label><input type="radio" name="start_ins" value="none" class="ins-radio" checked><div class="ins-card" style="justify-content: center;"><i class="fa-solid fa-ban" style="color:var(--danger);"></i><div class="i-name">ไม่ซื้อประกัน</div></div></label></div>`;
+        htmlContent += `<label><input type="radio" name="start_ins" value="none" class="ins-radio" checked><div class="ins-card" style="justify-content: center;"><i class="fa-solid fa-ban" style="color:var(--danger);"></i><div class="i-name">ไม่ซื้อ</div></div></label></div>`;
 
-        const { value: choice } = await Swal.fire({
-            html: htmlContent, showCancelButton: false, confirmButtonText: 'ยืนยันความพร้อม', confirmButtonColor: p.color, width: '600px',
-            customClass: { popup: 'hud-panel' }, allowOutsideClick: false,
-            preConfirm: () => {
-                const selected = document.querySelector('input[name="start_ins"]:checked');
-                return selected ? selected.value : 'none';
-            }
-        });
+        const { value: choice } = await Swal.fire({ html: htmlContent, showCancelButton: false, confirmButtonText: 'พร้อมลุย', confirmButtonColor: p.color, width: '600px', allowOutsideClick: false, preConfirm: () => { return document.querySelector('input[name="start_ins"]:checked')?.value || 'none'; } });
 
         if (choice && choice !== 'none') {
-            p.money -= insuranceTypes[choice].cost;
-            p.insurances.push(choice);
-            await Swal.fire({ title: 'ซื้อสำเร็จ!', text: `คุณได้รับ ${insuranceTypes[choice].name}`, icon: 'success', timer: 1000, showConfirmButton: false, customClass: { popup: 'hud-panel' } });
-        } else {
-            await Swal.fire({ title: 'พร้อมลุย!', icon: 'success', timer: 1000, showConfirmButton: false, customClass: { popup: 'hud-panel' } });
+            p.money -= insuranceTypes[choice].cost; p.insurances.push(choice);
+            await Swal.fire({ title: 'ซื้อสำเร็จ!', text: `ได้รับ ${insuranceTypes[choice].name}`, icon: 'success', timer: 1000, showConfirmButton: false });
         }
         
         p.ready = true;
         document.getElementById(`card-p${p.id}`).classList.remove('active');
-        await updateDoc(roomDocRef, { [`players.${myPlayerId}`]: p });
+        gameState.players[myPlayerId] = p;
+        syncState();
     }
 
     function checkAllReady() {
         if(!isHost) return;
         let allReady = true;
-        for(let i=0; i<gameState.playerCount; i++) {
-            if(!gameState.players[i].ready) allReady = false;
-        }
-        if(allReady) {
-            updateDoc(roomDocRef, { status: 'playing', currentPlayerIndex: 0 });
+        for(let i=0; i<gameState.playerCount; i++) { if(!gameState.players[i].ready) allReady = false; }
+        if(allReady && gameState.playerCount > 0) {
+            gameState.status = 'playing'; gameState.currentPlayerIndex = 0; syncState();
         }
     }
 
     function handleLiveSync(oldState) {
-        drawTokens(); // redraw token positions
-        
-        // Spawn text & handle skip notification
+        drawTokens();
         if(oldState) {
             for(let i=0; i<gameState.playerCount; i++) {
-                let op = oldState.players[i];
-                let np = gameState.players[i];
+                let op = oldState.players[i]; let np = gameState.players[i];
                 if(op && np) {
                     let diffM = np.money - op.money;
                     if(diffM > 0) spawnFloatingText(`+${diffM.toLocaleString()}฿`, 'var(--money)', i);
                     else if(diffM < 0) spawnFloatingText(`${diffM.toLocaleString()}฿`, 'var(--danger)', i);
                     
                     if(i === myPlayerId && op.skipTurn > 0 && np.skipTurn < op.skipTurn) {
-                        Swal.fire({ title: 'พักรักษาตัว!', html: `คุณถูกข้ามเทิร์นเพื่อพักฟื้น!`, icon: 'info', timer: 2000, showConfirmButton: false, customClass: {popup: 'hud-panel'} });
+                        Swal.fire({ title: 'พักรักษาตัว!', html: `ถูกข้ามเทิร์นเพื่อพักฟื้น!`, icon: 'info', timer: 2000, showConfirmButton: false});
                     }
                 }
             }
         }
-        
-        updateAllUI();
-        updateTurnDisplay();
+        updateAllUI(); updateTurnDisplay();
         
         if(isHost) {
             let activeCount = localPlayers.filter(p => p.active).length;
-            if(activeCount <= 1) {
-                updateDoc(roomDocRef, { status: 'finished' });
+            if(activeCount <= 1 && gameState.playerCount > 1) {
+                gameState.status = 'finished'; syncState();
             }
         }
     }
 
-    // --- 4. UI Updaters ---
     function updateAllUI() {
         for(let i=0; i<gameState.playerCount; i++) {
             let p = localPlayers[i];
             let card = document.getElementById(`card-p${p.id}`);
             if(!card) continue;
-            if(!p.active) {
-                card.style.opacity = '0.2';
-                continue;
-            }
+            if(!p.active) { card.style.opacity = '0.2'; continue; }
             document.getElementById(`p${p.id}-money`).innerText = p.money.toLocaleString();
             document.getElementById(`p${p.id}-energy`).innerText = p.energy + '%';
-            
-            let insHtml = p.insurances.map(ins => `<i class="fa-solid ${insuranceTypes[ins].icon}" title="${insuranceTypes[ins].name}" style="background:white; color:var(--primary); padding:4px; border-radius:6px; border:2px solid var(--outline);"></i>`).join(' ');
-            document.getElementById(`p${p.id}-ins`).innerHTML = insHtml;
+            document.getElementById(`p${p.id}-ins`).innerHTML = p.insurances.map(ins => `<i class="fa-solid ${insuranceTypes[ins].icon}" title="${insuranceTypes[ins].name}" style="background:white; color:var(--primary); padding:4px; border-radius:6px; border:2px solid var(--outline);"></i>`).join(' ');
         }
     }
 
     function updateTurnDisplay() {
         let p = localPlayers[gameState.currentPlayerIndex];
         if(!p) return;
-
-        for(let i=0; i<gameState.playerCount; i++) {
-            let card = document.getElementById(`card-p${i}`);
-            if(card) card.classList.remove('active');
-        }
+        for(let i=0; i<gameState.playerCount; i++) { let card = document.getElementById(`card-p${i}`); if(card) card.classList.remove('active'); }
+        let activeCard = document.getElementById(`card-p${p.id}`); if(activeCard) activeCard.classList.add('active');
         
-        let activeCard = document.getElementById(`card-p${p.id}`);
-        if(activeCard) activeCard.classList.add('active');
-        
-        let announcer = document.getElementById('turn-announcer');
-        announcer.innerHTML = `<span style="color:${p.color};">ตาของ ${p.name}</span>`;
-        
+        document.getElementById('turn-announcer').innerHTML = `<span style="color:${p.color};">ตาของ ${p.name}</span>`;
         let btn = document.getElementById('btn-roll');
         if(p.id === myPlayerId) {
-            btn.disabled = false;
-            btn.style.background = p.color;
-            btn.innerHTML = `<i class="fa-solid fa-dice dice-display" id="dice-icon"></i> ทอยลูกเต๋า`;
+            btn.disabled = false; btn.style.background = p.color; btn.innerHTML = `<i class="fa-solid fa-dice dice-display" id="dice-icon"></i> ทอยลูกเต๋า`;
         } else {
-            btn.disabled = true;
-            btn.style.background = '#64748b';
-            btn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> รอเพื่อนเล่น...`;
+            btn.disabled = true; btn.style.background = '#64748b'; btn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> รอเพื่อนเล่น...`;
         }
     }
 
     function drawTokens() {
-        for(let i=0; i<30; i++) {
-            let area = document.getElementById(`tokens-${i}`);
-            if(area) area.innerHTML = '';
-        }
+        for(let i=0; i<30; i++) { let area = document.getElementById(`tokens-${i}`); if(area) area.innerHTML = ''; }
         localPlayers.forEach(p => {
             if(!p.active) return;
             let area = document.getElementById(`tokens-${p.pos}`);
             if(area) {
-                let tk = document.createElement('div');
-                tk.className = `token`;
-                tk.style.background = p.color;
-                tk.innerText = p.id + 1;
-                area.appendChild(tk);
+                let tk = document.createElement('div'); tk.className = `token`; tk.style.background = p.color; tk.innerText = p.id + 1; area.appendChild(tk);
             }
         });
     }
 
     window.spawnFloatingText = function(text, color, playerId) {
-        const card = document.getElementById(`card-p${playerId}`);
-        if(!card) return;
-        const fText = document.createElement('div');
-        fText.className = 'floating-text';
-        fText.innerHTML = text;
-        fText.style.color = color;
-        
-        let rect = card.getBoundingClientRect();
-        fText.style.left = (rect.left + rect.width/2 - 20) + 'px';
-        fText.style.top = (rect.top - 20) + 'px';
-        
-        document.body.appendChild(fText);
-        setTimeout(() => fText.remove(), 1500);
+        const card = document.getElementById(`card-p${playerId}`); if(!card) return;
+        const fText = document.createElement('div'); fText.className = 'floating-text'; fText.innerHTML = text; fText.style.color = color;
+        let rect = card.getBoundingClientRect(); fText.style.left = (rect.left + rect.width/2 - 20) + 'px'; fText.style.top = (rect.top - 20) + 'px';
+        document.body.appendChild(fText); setTimeout(() => fText.remove(), 1500);
     }
 
-    // --- 5. Game Actions (Only executed by Active Player) ---
     window.rollDice = function() {
         if(gameState.currentPlayerIndex !== myPlayerId) return;
         let p = localPlayers[myPlayerId];
-        
-        let btn = document.getElementById('btn-roll');
-        let icon = document.getElementById('dice-icon');
-        btn.disabled = true;
-        icon.className = `fa-solid fa-dice dice-display dice-shake`;
+        let btn = document.getElementById('btn-roll'); let icon = document.getElementById('dice-icon');
+        btn.disabled = true; icon.className = `fa-solid fa-dice dice-display dice-shake`;
 
         setTimeout(() => {
             let roll = Math.floor(Math.random() * 6) + 1;
             icon.className = `fa-solid ${diceIcons[roll-1]} dice-display`;
-            
-            Swal.fire({
-                title: `คุณทอยได้ ${roll}!`, timer: 1000, showConfirmButton: false, backdrop: false,
-                position: 'top', customClass: {popup: 'hud-panel'}
-            }).then(() => {
-                movePlayerLocally(p, roll);
-            });
+            Swal.fire({ title: `ทอยได้ ${roll}!`, timer: 1000, showConfirmButton: false, position: 'top', customClass: {popup: 'hud-panel'} }).then(() => movePlayerLocally(p, roll));
         }, 600);
     }
 
     function movePlayerLocally(p, steps) {
         let currentStep = 0;
-        let moveInterval = setInterval(async () => {
-            currentStep++;
-            p.pos++;
+        let moveInterval = setInterval(() => {
+            currentStep++; p.pos++;
             if(p.pos >= 29) { p.pos = 29; currentStep = steps; }
-            
-            drawTokens(); // Animate locally
-            
+            drawTokens();
             if(currentStep >= steps) {
                 clearInterval(moveInterval);
-                // Save position to DB so others see where we landed before popup
-                await updateDoc(roomDocRef, { [`players.${myPlayerId}.pos`]: p.pos });
+                gameState.players[myPlayerId].pos = p.pos; syncState();
                 setTimeout(() => handleSpaceLanded(p), 300);
             }
         }, 300); 
@@ -698,229 +473,125 @@
 
     async function handleSpaceLanded(p) {
         let type = boardLayout[p.pos].type;
-        
-        if(type === 'work') {
-            showWorkMenu(p);
-        } 
+        if(type === 'work') showWorkMenu(p);
         else if(type === 'food') {
-            let cost = -1000; let heal = 30;
-            if(p.money < Math.abs(cost)) cost = -p.money; 
+            let cost = -1000; let heal = 30; if(p.money < Math.abs(cost)) cost = -p.money; 
             p.money += cost; p.energy = Math.min(100, p.energy + heal);
-            await showEventPopup('ร้านอาหาร', `จ่ายค่าอาหาร ${cost}฿<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-burger', '#f59e0b', p.color);
-            finishTurn(p);
+            await showEventPopup('ร้านอาหาร', `จ่ายค่าอาหาร ${cost}฿<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-burger', '#f59e0b', p.color); finishTurn(p);
         }
         else if(type === 'hospital') {
             let cost = -5000; let heal = 50;
             if(p.insurances.includes('health')) {
                 p.energy = Math.min(100, p.energy + heal);
-                await showEventPopup('เข้าโรงพยาบาล', `ป่วยกะทันหัน แต่<b>ประกันสุขภาพ</b>จ่ายให้ทั้งหมด!<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-truck-medical', 'var(--accent)', p.color);
-                finishTurn(p);
+                await showEventPopup('เข้าโรงพยาบาล', `ป่วยกะทันหัน แต่<b>ประกันสุขภาพ</b>จ่ายให้!<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-truck-medical', 'var(--accent)', p.color); finishTurn(p);
             } else {
                 p.money += cost; p.energy = Math.min(100, p.energy + heal);
-                await showEventPopup('เข้าโรงพยาบาล', `ป่วยกะทันหัน ไม่มีประกัน จ่ายค่ารักษา ${cost}฿<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-truck-medical', '#ef4444', p.color);
-                finishTurn(p);
+                await showEventPopup('เข้าโรงพยาบาล', `จ่ายค่ารักษา ${cost}฿<br>ฟื้นฟูพลังงาน +${heal}%`, 'fa-truck-medical', '#ef4444', p.color); finishTurn(p);
             }
         }
-        else if(type === 'insurance') {
-            buyInsuranceSpace(p);
-        }
+        else if(type === 'insurance') buyInsuranceSpace(p);
         else if(type === 'invest') {
-            const res = await Swal.fire({
-                title: 'ตลาดหุ้น', text: 'ต้องการลงทุน 3,000 ฿ ไหม? (โอกาส 50% ได้กำไร 2 เท่า)',
-                icon: 'question', showCancelButton: true, confirmButtonText: 'ลงทุน!', cancelButtonText: 'ผ่าน', customClass: {popup: 'hud-panel'}
-            });
+            const res = await Swal.fire({ title: 'ตลาดหุ้น', text: 'ลงทุน 3,000 ฿ ไหม? (โอกาส 50% ได้กำไร 2 เท่า)', icon: 'question', showCancelButton: true, confirmButtonText: 'ลงทุน', cancelButtonText: 'ผ่าน' });
             if(res.isConfirmed) {
-                if(p.money < 3000) {
-                    await Swal.fire({title: 'เงินไม่พอ!', icon: 'error', customClass: {popup: 'hud-panel'}});
-                } else {
-                    if(Math.random() > 0.5) {
-                        p.money += 3000; 
-                        await showEventPopup('หุ้นขึ้น!', `ได้กำไร +3,000 ฿`, 'fa-arrow-trend-up', 'var(--money)', p.color);
-                    } else {
-                        p.money -= 3000;
-                        await showEventPopup('หุ้นตก!', `ขาดทุน -3,000 ฿`, 'fa-arrow-trend-down', 'var(--danger)', p.color);
-                    }
+                if(p.money < 3000) await Swal.fire('เงินไม่พอ!', '', 'error');
+                else {
+                    if(Math.random() > 0.5) { p.money += 3000; await showEventPopup('หุ้นขึ้น!', `ได้กำไร +3,000 ฿`, 'fa-arrow-trend-up', 'var(--money)', p.color); } 
+                    else { p.money -= 3000; await showEventPopup('หุ้นตก!', `ขาดทุน -3,000 ฿`, 'fa-arrow-trend-down', 'var(--danger)', p.color); }
                 }
             }
             finishTurn(p);
         }
-        else if(type === 'event') {
-            triggerRandomCard(p);
-        }
-        else if(type === 'goal') {
-            finishTurn(p); // Ending is checked globally
-        }
-        else {
-            finishTurn(p);
-        }
+        else if(type === 'event') triggerRandomCard(p);
+        else finishTurn(p);
     }
 
     function showWorkMenu(p) {
         Swal.fire({
-            title: 'ทำงานหาเงิน',
-            html: `
-                <div style="margin-bottom: 15px; font-size: 16px;">
-                    <span style="color:var(--money); font-weight:bold;"><i class="fa-solid fa-coins"></i> เงิน: ${p.money.toLocaleString()} ฿</span> &nbsp;|&nbsp; 
-                    <span style="color:${p.energy > 20 ? 'var(--primary)' : 'var(--danger)'}; font-weight:bold;"><i class="fa-solid fa-bolt"></i> พลังงาน: ${p.energy}%</span>
-                </div>
-                ทำงาน 1 ครั้ง ได้เงิน <b style="color:var(--money);">+4,000 ฿</b> เสียพลังงาน <b style="color:var(--danger);">-20%</b><br>
-                <div style="background: #fee2e2; border: 1px solid var(--danger); padding: 8px; border-radius: 8px; margin-top: 15px; font-size: 12px; color: var(--danger); font-weight: bold;">
-                    ระวัง! หากทำงานจนพลังงานลดลงเหลือ 0% ร่างกายจะพัง เสียค่ารักษา 5,000 ฿ และถูกสั่งงดเดิน 1 เทิร์น
-                </div>
-            `,
-            icon: 'info', showCancelButton: true, confirmButtonText: '<i class="fa-solid fa-briefcase"></i> ลุยทำงาน!', cancelButtonText: 'พอแค่นี้ (จบเทิร์น)',
-            confirmButtonColor: '#3b82f6', cancelButtonColor: '#64748b', allowOutsideClick: false, customClass: { popup: 'hud-panel' }
-        }).then(async (res) => {
+            title: 'ทำงานหาเงิน', html: `ทำงาน 1 ครั้ง ได้เงิน <b style="color:var(--money);">+4,000 ฿</b> เสียพลังงาน <b style="color:var(--danger);">-20%</b>`,
+            icon: 'info', showCancelButton: true, confirmButtonText: 'ลุยทำงาน!', cancelButtonText: 'พอแค่นี้ (จบเทิร์น)', allowOutsideClick: false
+        }).then((res) => {
             if(res.isConfirmed) {
-                p.energy -= 20; p.money += 4000;
-                await updateDoc(roomDocRef, { [`players.${p.id}`]: p }); // Sync mid-turn for live feedback
-                
-                if (p.energy <= 0) {
-                    setTimeout(() => forceHospitalFromOverwork(p), 500);
-                } else {
-                    setTimeout(() => showWorkMenu(p), 300);
-                }
-            } else {
-                finishTurn(p);
-            }
+                p.energy -= 20; p.money += 4000; gameState.players[p.id] = p; syncState();
+                if (p.energy <= 0) setTimeout(() => forceHospitalFromOverwork(p), 500);
+                else setTimeout(() => showWorkMenu(p), 300);
+            } else finishTurn(p);
         });
     }
 
     async function forceHospitalFromOverwork(p) {
-        p.skipTurn = 1; 
-        let cost = 5000;
-        let msg = ``;
-        if(p.insurances.includes('health')) {
-            cost = 0;
-            msg = `พลังงานหมดเกลี้ยง!<br>แต่โชคดีมี <b>ประกันสุขภาพ</b> จ่ายให้ 5,000 ฿!<br><br><span style="color:var(--danger); font-size: 14px;">*คุณถูกหมอสั่งงดเดิน 1 เทิร์น*</span>`;
-        } else {
-            p.money -= cost;
-            msg = `พลังงานหมดเกลี้ยงโดนหามส่ง รพ.!<br>เสียค่ารักษา <b style="color:var(--danger);">5,000 ฿</b><br><br><span style="color:var(--danger); font-size: 14px;">*คุณถูกหมอสั่งงดเดิน 1 เทิร์น*</span>`;
-        }
-        p.energy = 50; 
-        await Swal.fire({ title: 'ร่างพัง!', html: msg, icon: 'error', customClass: { popup: 'hud-panel' }, allowOutsideClick: false });
-        finishTurn(p);
+        p.skipTurn = 1; let cost = 5000; let msg = ``;
+        if(p.insurances.includes('health')) { cost = 0; msg = `มี <b>ประกันสุขภาพ</b> จ่ายให้ 5,000 ฿!<br>*งดเดิน 1 เทิร์น*`; } 
+        else { p.money -= cost; msg = `เสียค่ารักษา <b style="color:var(--danger);">5,000 ฿</b><br>*งดเดิน 1 เทิร์น*`; }
+        p.energy = 50; await Swal.fire({ title: 'ร่างพัง!', html: msg, icon: 'error', allowOutsideClick: false }); finishTurn(p);
     }
 
     async function buyInsuranceSpace(p) {
-        let htmlContent = `
-            <div style="font-size: 50px; color: #4338ca; margin-bottom: 10px;"><i class="fa-solid fa-shield-halved"></i></div>
-            <h2 style="margin: 0 0 10px 0; color: var(--outline);">ตัวแทนขายประกัน</h2>
-            <div class="ins-grid">
-        `;
-        let availableCount = 0;
+        let htmlContent = `<div class="ins-grid">`; let availableCount = 0;
         for(let key in insuranceTypes) {
             if(!p.insurances.includes(key)) {
-                availableCount++;
-                let ins = insuranceTypes[key];
+                availableCount++; let ins = insuranceTypes[key];
                 htmlContent += `<label><input type="radio" name="mid_ins" value="${key}" class="ins-radio"><div class="ins-card"><i class="fa-solid ${ins.icon}"></i><div class="i-name">${ins.name}</div><div class="i-cost">-${ins.cost.toLocaleString()} ฿</div></div></label>`;
             }
         }
-        if(availableCount === 0) {
-            await Swal.fire({title: 'คุ้มครองเต็มพิกัด!', text: 'คุณมีประกันครบทุกรูปแบบแล้ว', icon: 'info', customClass: {popup: 'hud-panel'}});
-            finishTurn(p); return;
-        }
-        htmlContent += `<label><input type="radio" name="mid_ins" value="none" class="ins-radio" checked><div class="ins-card" style="justify-content: center;"><i class="fa-solid fa-person-walking-arrow-right" style="color:var(--outline);"></i><div class="i-name">เลื่อนผ่าน</div></div></label></div>`;
+        if(availableCount === 0) { await Swal.fire('คุ้มครองเต็มพิกัด!', '', 'info'); finishTurn(p); return; }
+        htmlContent += `<label><input type="radio" name="mid_ins" value="none" class="ins-radio" checked><div class="ins-card"><i class="fa-solid fa-person-walking-arrow-right"></i><div class="i-name">เลื่อนผ่าน</div></div></label></div>`;
 
-        const { value: choice } = await Swal.fire({
-            html: htmlContent, showCancelButton: false, confirmButtonText: 'ยืนยัน', confirmButtonColor: p.color, width: '600px',
-            customClass: { popup: 'hud-panel' }, allowOutsideClick: false, preConfirm: () => {
-                const selected = document.querySelector('input[name="mid_ins"]:checked'); return selected ? selected.value : 'none';
-            }
-        });
+        const { value: choice } = await Swal.fire({ html: htmlContent, showCancelButton: false, confirmButtonText: 'ยืนยัน', allowOutsideClick: false, preConfirm: () => { return document.querySelector('input[name="mid_ins"]:checked')?.value || 'none'; } });
 
         if(choice && choice !== 'none') {
             let cost = insuranceTypes[choice].cost;
-            if(p.money >= cost) {
-                p.money -= cost; p.insurances.push(choice);
-                await showEventPopup('ซื้อประกันสำเร็จ', `หักเงิน ${cost} ฿`, insuranceTypes[choice].icon, 'var(--primary)', p.color);
-            } else {
-                await Swal.fire({title: 'เงินไม่พอ!', icon: 'error', customClass: {popup: 'hud-panel'}});
-            }
+            if(p.money >= cost) { p.money -= cost; p.insurances.push(choice); await showEventPopup('ซื้อสำเร็จ', `หักเงิน ${cost} ฿`, insuranceTypes[choice].icon, 'var(--primary)', p.color); } 
+            else { await Swal.fire('เงินไม่พอ!', '', 'error'); }
         }
         finishTurn(p);
     }
 
     async function triggerRandomCard(p) {
         const cards = [
-            { id: 'bonus', t: 'โบนัสออก!', d: 'เจ้านายใจดีแจกโบนัส +5,000 ฿', m: 5000, e: 0, i: 'fa-gift', c: 'var(--money)' },
+            { id: 'bonus', t: 'โบนัสออก!', d: 'ได้โบนัส +5,000 ฿', m: 5000, e: 0, i: 'fa-gift', c: 'var(--money)' },
             { id: 'wallet', t: 'กระเป๋าตังค์หาย', d: 'ทำเงินหล่นหาย 2,000 ฿', m: -2000, e: 0, i: 'fa-face-frown', c: 'var(--danger)' },
-            { id: 'vacation', t: 'ลาพักร้อน', d: 'ได้ตั๋วไปเที่ยวฟรี พลังงานเต็ม 100!', m: 0, e: 100, i: 'fa-plane', c: 'var(--primary)' },
-            { id: 'car', t: 'รถเสีย', d: 'เกิดอุบัติเหตุ ต้องจ่ายค่าซ่อมรถ 3,000 ฿', m: -3000, e: 0, i: 'fa-car-burst', c: 'var(--warning)' }
+            { id: 'vacation', t: 'ลาพักร้อน', d: 'ไปเที่ยวฟรี พลังงานเต็ม 100!', m: 0, e: 100, i: 'fa-plane', c: 'var(--primary)' },
+            { id: 'car', t: 'รถเสีย', d: 'จ่ายค่าซ่อมรถ 3,000 ฿', m: -3000, e: 0, i: 'fa-car-burst', c: 'var(--warning)' }
         ];
         let card = cards[Math.floor(Math.random() * cards.length)];
         
-        if(card.id === 'wallet' && p.insurances.includes('property')) {
-            card.d = 'กระเป๋าตังค์หาย แต่<b>ประกันวินาศภัย</b>ชดเชยเงินให้เต็มจำนวน!'; card.m = 0; card.i = 'fa-house-fire'; card.c = 'var(--primary)';
-        }
-        if(card.id === 'car' && p.insurances.includes('accident')) {
-            card.d = 'รถเสียชำรุด แต่<b>ประกันอุบัติเหตุ</b>รับผิดชอบค่าซ่อมทั้งหมด!'; card.m = 0; card.i = 'fa-shield-halved'; card.c = 'var(--primary)';
-        }
+        if(card.id === 'wallet' && p.insurances.includes('property')) { card.d = '<b>ประกันวินาศภัย</b>ชดเชยให้เต็มจำนวน!'; card.m = 0; card.i = 'fa-house-fire'; card.c = 'var(--primary)'; }
+        if(card.id === 'car' && p.insurances.includes('accident')) { card.d = '<b>ประกันอุบัติเหตุ</b>รับผิดชอบค่าซ่อม!'; card.m = 0; card.i = 'fa-shield-halved'; card.c = 'var(--primary)'; }
         
         if(card.e === 100) p.energy = 100; else { p.money += card.m; p.energy += card.e; }
-        await showEventPopup(card.t, card.d, card.i, card.c, p.color);
-        finishTurn(p);
+        await showEventPopup(card.t, card.d, card.i, card.c, p.color); finishTurn(p);
     }
 
     function showEventPopup(title, desc, icon, color, btnColor) {
-        return Swal.fire({
-            html: `<div style="font-size:50px; color:${color}; margin-bottom:15px;"><i class="fa-solid ${icon}"></i></div>
-                   <h2 style="margin:0 0 10px 0; color:var(--outline);">${title}</h2>
-                   <p style="font-weight:600; color:#475569;">${desc}</p>`,
-            confirmButtonText: 'รับทราบ', confirmButtonColor: btnColor, customClass: { popup: 'hud-panel' }, allowOutsideClick: false
-        });
+        return Swal.fire({ html: `<div style="font-size:50px; color:${color}; margin-bottom:15px;"><i class="fa-solid ${icon}"></i></div><h2 style="margin:0 0 10px 0;">${title}</h2><p>${desc}</p>`, confirmButtonText: 'รับทราบ', confirmButtonColor: btnColor, allowOutsideClick: false });
     }
 
     async function finishTurn(p) {
-        if (p.money < 0) {
-            p.active = false;
-            await Swal.fire({title: 'ล้มละลาย!', text: `คุณเงินหมดและถูกออกจากเกม!`, icon: 'error', customClass: {popup: 'hud-panel'}, allowOutsideClick: false});
-        }
+        if (p.money < 0) { p.active = false; await Swal.fire({title: 'ล้มละลาย!', text: `เงินหมดและถูกออกจากเกม!`, icon: 'error', allowOutsideClick: false}); }
+        gameState.players[p.id] = p; 
         
-        let nextIdx = getNextActivePlayerIndex();
-        
-        await updateDoc(roomDocRef, {
-            [`players.${p.id}`]: p,
-            players: gameState.players, // Sync skipTurns that might have been decremented
-            currentPlayerIndex: nextIdx
-        });
-    }
-
-    function getNextActivePlayerIndex() {
         let nextIdx = (gameState.currentPlayerIndex + 1) % gameState.playerCount;
         let loops = 0;
         while(loops < gameState.playerCount) {
             let np = gameState.players[nextIdx];
             if(np.active) {
-                if(np.skipTurn > 0) {
-                    np.skipTurn--; // Mutate local obj, will be synced
-                    nextIdx = (nextIdx + 1) % gameState.playerCount;
-                } else { return nextIdx; }
+                if(np.skipTurn > 0) { np.skipTurn--; nextIdx = (nextIdx + 1) % gameState.playerCount; } 
+                else { break; }
             } else { nextIdx = (nextIdx + 1) % gameState.playerCount; }
             loops++;
         }
-        return nextIdx;
+        gameState.currentPlayerIndex = nextIdx;
+        syncState();
     }
 
     function showWinnerScreen() {
-        // Evaluate life insurance
         localPlayers.forEach(p => { if(p.active && p.insurances.includes('life')) p.money += 15000; });
         let winner = localPlayers.filter(p => p.active).sort((a,b) => b.money - a.money)[0];
-        
         let html = localPlayers.filter(p => p.active).sort((a,b) => b.money - a.money).map((p, idx) => {
-            return `<div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:800; font-size:18px;">
-                <span style="color:${p.color}">${idx+1}. ${p.name} ${p.id===myPlayerId?'(คุณ)':''}</span>
-                <span style="color:var(--money)">${p.money.toLocaleString()} ฿</span>
-            </div>`;
+            return `<div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:800; font-size:18px;"><span style="color:${p.color}">${idx+1}. ${p.name}</span><span style="color:var(--money)">${p.money.toLocaleString()} ฿</span></div>`;
         }).join('');
-
-        Swal.fire({
-            title: `🏆 ผู้ชนะคือ ${winner.name}!`,
-            html: `สรุปความมั่งคั่งตอนเกษียณ:<br><br>${html}`,
-            icon: 'success', confirmButtonText: 'กลับหน้าแรก', allowOutsideClick: false, customClass: {popup: 'hud-panel'}
-        }).then(() => location.reload());
+        Swal.fire({ title: `🏆 ผู้ชนะคือ ${winner.name}!`, html: `สรุปความมั่งคั่งตอนเกษียณ:<br><br>${html}`, icon: 'success', confirmButtonText: 'กลับหน้าแรก', allowOutsideClick: false }).then(() => location.reload());
     }
-
 </script>
 
 </body>
